@@ -13,12 +13,19 @@ interface ForceGraphProps {
 }
 
 export default function ForceGraph({ data, width = 800, height = 600 }: ForceGraphProps) {
-  const fgRef = useRef<any>();
+  const fgRef = useRef<any>(null);
   const { selectedNode, setSelectedNode, hoveredNode, setHoveredNode, highlightedNodes } = useGraphStore();
-  const [graphData, setGraphData] = useState<GraphData>(data);
+  const [graphData, setGraphData] = useState<any>({
+    nodes: data.nodes,
+    links: data.edges,
+  });
 
   useEffect(() => {
-    setGraphData(data);
+    // Transform edges to links for react-force-graph
+    setGraphData({
+      nodes: data.nodes,
+      links: data.edges,
+    });
   }, [data]);
 
   // Handle node click
