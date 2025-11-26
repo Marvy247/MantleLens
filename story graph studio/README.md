@@ -16,19 +16,30 @@ Story Graph Studio is an open-source developer tool that visualizes the relation
 - **Real-time Data**: Fetches live data from Story Protocol mainnet
 - **Node Details Panel**: Click any IP to see full metadata, licensing terms, revenue, and relationships
 - **Smart Highlighting**: Hover to highlight connected nodes and trace derivative chains
+- **Floating Stats Cards**: Real-time metrics overlay showing graph statistics
 - **Responsive Design**: Works on desktop and mobile devices
 
-### Data Explorer
-- **Search & Filter**: Find IPs by name, creator, or address
-- **Advanced Filters**: Filter by license type, media type, date range, and revenue
-- **Analytics Dashboard**: View ecosystem metrics and trending IPs
-- **License Color Coding**: Visual distinction between different license types
+### Search & Filter
+- **Smart Search Bar**: Real-time search with autocomplete dropdown
+- **Multi-Select Filters**: Filter by license types, media types, and more
+- **Quick Filters**: One-click filters for commercial IPs and derivatives
+- **Active Filters Display**: Visual badges showing applied filters
+- **Advanced Filter Panel**: Comprehensive filtering interface
+
+### Analytics Dashboard
+- **Overview Stats**: 6 key metrics cards (Total IPs, Derivatives, Revenue, etc.)
+- **License Distribution**: Interactive pie chart showing license type breakdown
+- **Media Type Chart**: Bar chart of content types
+- **IPs Over Time**: Area chart tracking IP creation timeline
+- **Trending IPs**: Leaderboard of most remixed assets
+- **Key Insights**: Derivative rate, commercial adoption, creator stats
 
 ### Developer Tools
 - **Export Graph Data**: Download graph as JSON for analysis
 - **GraphQL API Ready**: Extendable API structure
 - **TypeScript Support**: Fully typed for better DX
 - **SWR Data Fetching**: Optimized caching and revalidation
+- **Recharts Integration**: Beautiful, responsive charts
 
 ## 🚀 Getting Started
 

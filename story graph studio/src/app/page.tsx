@@ -7,8 +7,14 @@ import ForceGraph from '@/components/graph/ForceGraph';
 import NodeDetails from '@/components/graph/NodeDetails';
 import GraphControls from '@/components/graph/GraphControls';
 import LegendPanel from '@/components/graph/LegendPanel';
+import GraphStats from '@/components/graph/GraphStats';
+import SearchBar from '@/components/search/SearchBar';
+import FilterPanel from '@/components/search/FilterPanel';
+import ActiveFilters from '@/components/search/ActiveFilters';
 import { useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, BarChart3 } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
@@ -33,9 +39,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm">
+      <header className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Story Graph Studio
@@ -61,10 +67,38 @@ export default function Home() {
                   </div>
                 </div>
               )}
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-white"
+              >
+                <Link href="/analytics">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Analytics
+                </Link>
+              </Button>
               <appkit-button />
             </div>
           </div>
+          
+          {/* Search and Filter Bar */}
+          <div className="flex items-center gap-3">
+            <SearchBar 
+              onSelectIP={(ipId) => {
+                // Find and select the node in the graph
+                const node = graphData.nodes.find(n => n.ipId === ipId);
+                if (node) {
+                  useGraphStore.setState({ selectedNode: node });
+                }
+              }}
+            />
+            <FilterPanel />
+          </div>
         </div>
+
+        {/* Active Filters */}
+        <ActiveFilters />
       </header>
 
       {/* Main Content */}
@@ -93,6 +127,7 @@ export default function Home() {
               height={dimensions.height}
             />
             <LegendPanel />
+            <GraphStats metrics={metrics} />
             <GraphControls graphData={graphData} />
             {selectedNode && <NodeDetails node={selectedNode} />}
           </div>
