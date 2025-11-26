@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Base Lending Pool Frontend",
-  description: "Frontend for Base Lending Pool smart contracts",
+  title: "Story Graph Studio - IP Relationship Explorer",
+  description: "Interactive visualization of Story Protocol IP assets, derivatives, and licensing relationships",
 };
 
 export default async function RootLayout({
