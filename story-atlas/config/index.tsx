@@ -1,24 +1,18 @@
-import { cookieStorage, createStorage, http } from '@wagmi/core'
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { base, baseSepolia } from '@reown/appkit/networks'
+import { createConfig, http } from '@wagmi/core'
+import { mantleMainnet, mantleTestnet } from '@/lib/mantle/client'
 
-// Get projectId from https://dashboard.reown.com
-export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
+// Mantle Network configuration
+export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || 'mantle-asset-atlas'
 
-if (!projectId) {
-  throw new Error('Project ID is not defined')
-}
+// Use Mantle networks
+export const networks = [mantleMainnet, mantleTestnet]
 
-export const networks = [base, baseSepolia]
-
-//Set up the Wagmi Adapter (Config)
-export const wagmiAdapter = new WagmiAdapter({
-  storage: createStorage({
-    storage: cookieStorage
-  }),
+// Simple Wagmi config for Mantle
+export const config = createConfig({
+  chains: [mantleMainnet, mantleTestnet],
+  transports: {
+    [mantleMainnet.id]: http(),
+    [mantleTestnet.id]: http(),
+  },
   ssr: true,
-  projectId,
-  networks
 })
-
-export const config = wagmiAdapter.wagmiConfig

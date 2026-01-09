@@ -1,16 +1,20 @@
 // Zustand store for graph state management
 import { create } from 'zustand';
-import { GraphNode } from '../lib/story-protocol/types';
+import { RWAGraphNode } from '../lib/mantle/types';
+import { GraphNode as LegacyGraphNode } from '../lib/story-protocol/types';
+
+// Support both RWA and legacy types for backward compatibility
+type GraphNodeType = RWAGraphNode | LegacyGraphNode;
 
 interface GraphState {
-  selectedNode: GraphNode | null;
-  hoveredNode: GraphNode | null;
+  selectedNode: GraphNodeType | null;
+  hoveredNode: GraphNodeType | null;
   highlightedNodes: Set<string>;
   zoomLevel: number;
   isPanMode: boolean;
   
-  setSelectedNode: (node: GraphNode | null) => void;
-  setHoveredNode: (node: GraphNode | null) => void;
+  setSelectedNode: (node: GraphNodeType | null) => void;
+  setHoveredNode: (node: GraphNodeType | null) => void;
   setHighlightedNodes: (nodeIds: Set<string>) => void;
   setZoomLevel: (level: number) => void;
   togglePanMode: () => void;

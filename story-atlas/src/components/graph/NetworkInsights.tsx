@@ -32,7 +32,7 @@ export default function NetworkInsights({ graphData }: NetworkInsightsProps) {
     const maxPossibleEdges = (nodes.length * (nodes.length - 1)) / 2;
     const density = maxPossibleEdges > 0 ? (edges.length / maxPossibleEdges) * 100 : 0;
 
-    // Find most influential IP (highest degree centrality)
+    // Find most influential asset (highest degree centrality)
     const degreeMap = new Map<string, number>();
     edges.forEach(edge => {
       degreeMap.set(edge.source, (degreeMap.get(edge.source) || 0) + 1);
@@ -77,7 +77,7 @@ export default function NetworkInsights({ graphData }: NetworkInsightsProps) {
         label: 'Network Density',
         value: `${density.toFixed(1)}%`,
         color: 'text-blue-400',
-        description: 'How connected the IPs are',
+        description: 'How connected the assets are',
       },
       {
         icon: Award,

@@ -3,8 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { GraphData, GraphNode, GraphEdge } from '@/lib/story-protocol/types';
+import { RWAGraphData, RWAGraphNode, RWAGraphEdge } from '@/lib/mantle/types';
 import { useGraphStore } from '@/stores/graphStore';
 import { getNodeColor, getNodeSize } from '@/lib/graph/graph-builder';
+import { getNodeColor as getRWANodeColor, getNodeSize as getRWANodeSize } from '@/lib/mantle/graph-builder';
 
 // Dynamically import ForceGraph2D to avoid SSR issues
 const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), {
@@ -17,9 +19,14 @@ const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), {
 });
 
 interface ForceGraphProps {
-  data: GraphData;
+  data: GraphData | RWAGraphData;
   width?: number;
   height?: number;
+}
+
+// Type guard to check if data is RWAGraphData
+function isRWAGraphData(data: GraphData | RWAGraphData): data is RWAGraphData {
+  return data.nodes.length > 0 && 'assetType' in data.nodes[0];
 }
 
 export default function ForceGraph({ data, width = 800, height = 600 }: ForceGraphProps) {
@@ -38,8 +45,13 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
     });
   }, [data]);
 
-  // Handle node click
-  const handleNodeClick = (node: any) => {
+  // Handle node click - PREVENT ZOOM, SHOW DETAILS
+  const handleNodeClick = (node: any, event?: MouseEvent) => {
+    if (!node) return;
+    
+    console.log('✅ Node clicked:', node.name);
+    
+    // Set selected node to show details panel
     setSelectedNode(node as GraphNode);
     
     // Highlight connected nodes
@@ -48,11 +60,14 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
     
     // Add parent and child nodes
     data.edges.forEach(edge => {
-      if (edge.source === node.id) {
-        connectedNodeIds.add(typeof edge.target === 'string' ? edge.target : (edge.target as any).id);
+      const sourceId = typeof edge.source === 'string' ? edge.source : (edge.source as any).id;
+      const targetId = typeof edge.target === 'string' ? edge.target : (edge.target as any).id;
+      
+      if (sourceId === node.id) {
+        connectedNodeIds.add(targetId);
       }
-      if (edge.target === node.id) {
-        connectedNodeIds.add(typeof edge.source === 'string' ? edge.source : (edge.source as any).id);
+      if (targetId === node.id) {
+        connectedNodeIds.add(sourceId);
       }
     });
     
@@ -64,18 +79,21 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
     setHoveredNode(node as GraphNode | null);
   };
 
+  // Detect if we're using RWA data
+  const isRWAData = isRWAGraphData(data);
+
   // Node canvas rendering
   const nodeCanvasObject = (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
     const label = node.name;
     const fontSize = 12 / globalScale;
-    const nodeSize = getNodeSize(node);
+    const nodeSize = isRWAData ? getRWANodeSize(node) : getNodeSize(node);
     const isHighlighted = highlightedNodes.has(node.id);
     const isSelected = selectedNode?.id === node.id;
 
     // Draw node circle
     ctx.beginPath();
     ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI);
-    ctx.fillStyle = getNodeColor(node);
+    ctx.fillStyle = isRWAData ? getRWANodeColor(node) : getNodeColor(node);
     ctx.fill();
 
     // Add border for selected/highlighted nodes
@@ -140,36 +158,95 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
   };
 
   return (
-    <div className="relative w-full h-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800">
+    <div className="relative w-full h-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800" style={{ cursor: hoveredNode ? 'pointer' : 'default' }}>
       {data.nodes.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
-            <p className="text-zinc-400 text-lg mb-2">No IP assets to display</p>
+            <p className="text-zinc-400 text-lg mb-2">No assets to display</p>
             <p className="text-zinc-600 text-sm">Try adjusting your filters or check your connection</p>
           </div>
         </div>
       ) : (
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={graphData}
-          width={width}
-          height={height}
-          backgroundColor="#09090b"
-          nodeCanvasObject={nodeCanvasObject}
-          linkCanvasObject={linkCanvasObject}
-          onNodeClick={handleNodeClick}
-          onNodeHover={handleNodeHover}
-          onBackgroundClick={() => {
-            setSelectedNode(null);
-            useGraphStore.setState({ highlightedNodes: new Set() });
-          }}
-          cooldownTicks={100}
-          d3AlphaDecay={0.02}
-          d3VelocityDecay={0.3}
-          enableNodeDrag={true}
-          enableZoomInteraction={true}
-          enablePanInteraction={true}
-        />
+        <>
+          <ForceGraph2D
+            ref={fgRef}
+            graphData={graphData}
+            width={width}
+            height={height}
+            backgroundColor="#09090b"
+            nodeCanvasObject={nodeCanvasObject}
+            linkCanvasObject={linkCanvasObject}
+            onNodeClick={handleNodeClick}
+            onNodeHover={handleNodeHover}
+            onBackgroundClick={() => {
+              console.log('Background clicked - clearing selection');
+              setSelectedNode(null);
+              useGraphStore.setState({ highlightedNodes: new Set() });
+            }}
+            // Physics settings for smooth movement
+            cooldownTicks={100}
+            d3AlphaDecay={0.02}
+            d3VelocityDecay={0.3}
+            warmupTicks={100}
+            // Interaction settings - Enable mouse wheel zoom, disable node drag
+            enableNodeDrag={false}
+            enableZoomInteraction={true}
+            enablePanInteraction={true}
+            // Make nodes easier to click
+            nodePointerAreaPaint={(node: any, color: string, ctx: CanvasRenderingContext2D) => {
+              const nodeSize = isRWAData ? getRWANodeSize(node) : getNodeSize(node);
+              ctx.fillStyle = color;
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, nodeSize * 3, 0, 2 * Math.PI);
+              ctx.fill();
+            }}
+          />
+          
+          {/* Hover Tooltip - Beautiful floating tooltip */}
+          {hoveredNode && (
+            <div 
+              className="absolute pointer-events-none z-50 animate-in fade-in duration-200"
+              style={{
+                left: '50%',
+                top: '20px',
+                transform: 'translateX(-50%)'
+              }}
+            >
+              <div className="bg-gradient-to-br from-zinc-900/95 to-zinc-800/95 backdrop-blur-md border-2 border-blue-500/30 rounded-xl px-4 py-3 shadow-2xl">
+                <div className="flex items-center gap-2 mb-1">
+                  <div 
+                    className="w-3 h-3 rounded-full animate-pulse"
+                    style={{ 
+                      backgroundColor: isRWAData 
+                        ? getRWANodeColor(hoveredNode as any) 
+                        : getNodeColor(hoveredNode as any)
+                    }}
+                  />
+                  <div className="text-sm font-bold text-white">{hoveredNode.name}</div>
+                </div>
+                <div className="text-xs text-zinc-400 flex items-center gap-2">
+                  <span className="capitalize">
+                    {((hoveredNode as any).assetType || (hoveredNode as any).licenseType || 'Asset').replace('-', ' ')}
+                  </span>
+                  {(hoveredNode as any).totalValue && (
+                    <>
+                      <span className="text-zinc-600">•</span>
+                      <span className="text-blue-400 font-semibold">
+                        ${parseFloat((hoveredNode as any).totalValue).toLocaleString()}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div className="text-xs text-zinc-500 mt-1.5 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                  Click to view details
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -19,9 +19,9 @@ export default function GraphStats({ metrics }: GraphStatsProps) {
       <Card className="bg-zinc-900/90 border-zinc-800 text-white p-3 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-1">
           <Network className="h-4 w-4 text-blue-400" />
-          <span className="text-xs text-zinc-400">Total IPs</span>
+          <span className="text-xs text-zinc-400">Total Assets</span>
         </div>
-        <p className="text-2xl font-bold">{metrics.totalNodes}</p>
+        <p className="text-2xl font-bold text-white">{metrics.totalNodes}</p>
       </Card>
 
       <Card className="bg-zinc-900/90 border-zinc-800 text-white p-3 backdrop-blur-sm">
@@ -29,7 +29,7 @@ export default function GraphStats({ metrics }: GraphStatsProps) {
           <GitBranch className="h-4 w-4 text-purple-400" />
           <span className="text-xs text-zinc-400">Connections</span>
         </div>
-        <p className="text-2xl font-bold">{metrics.totalEdges}</p>
+        <p className="text-2xl font-bold text-white">{metrics.totalEdges}</p>
       </Card>
 
       <Card className="bg-zinc-900/90 border-zinc-800 text-white p-3 backdrop-blur-sm">
@@ -37,7 +37,7 @@ export default function GraphStats({ metrics }: GraphStatsProps) {
           <TrendingUp className="h-4 w-4 text-green-400" />
           <span className="text-xs text-zinc-400">Avg Degree</span>
         </div>
-        <p className="text-2xl font-bold">{metrics.avgDegree.toFixed(1)}</p>
+        <p className="text-2xl font-bold text-white">{metrics.avgDegree.toFixed(1)}</p>
       </Card>
 
       {metrics.isolatedNodes > 0 && (
@@ -46,7 +46,7 @@ export default function GraphStats({ metrics }: GraphStatsProps) {
             <Zap className="h-4 w-4 text-amber-400" />
             <span className="text-xs text-zinc-400">Isolated</span>
           </div>
-          <p className="text-2xl font-bold">{metrics.isolatedNodes}</p>
+          <p className="text-2xl font-bold text-white">{metrics.isolatedNodes}</p>
         </Card>
       )}
     </div>

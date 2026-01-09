@@ -36,7 +36,7 @@ export default function TrendingIPs({ mostRemixedIPs }: TrendingIPsProps) {
     <Card className="bg-zinc-900 border-zinc-800 p-6">
       <div className="flex items-center gap-2 mb-4">
         <TrendingUp className="h-5 w-5 text-green-400" />
-        <h3 className="text-lg font-semibold text-white">Most Remixed IPs</h3>
+        <h3 className="text-lg font-semibold text-white">Top Assets by Children</h3>
       </div>
 
       {mostRemixedIPs.length > 0 ? (
@@ -56,7 +56,7 @@ export default function TrendingIPs({ mostRemixedIPs }: TrendingIPsProps) {
 
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-white truncate">
-                  {ip.name || 'Unnamed IP'}
+                  {ip.name || 'Unnamed Asset'}
                 </p>
                 <p className="text-xs text-zinc-500">
                   {formatAddress(ip.ipId)}

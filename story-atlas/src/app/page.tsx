@@ -86,22 +86,22 @@ export default function Home() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Story Atlas
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                MantleLens
               </h1>
               <p className="text-sm text-zinc-400 mt-1">
-                Interactive IP Relationship Explorer
+                Crystal-clear visibility into RWA on Mantle
               </p>
             </div>
             <div className="flex items-center gap-6">
               {!isLoading && (
                 <div className="flex gap-6 text-sm">
                   <div>
-                    <span className="text-zinc-500">IPs: </span>
+                    <span className="text-zinc-500">Assets: </span>
                     <span className="font-semibold">{metrics.totalNodes}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500">Connections: </span>
+                    <span className="text-zinc-500">Relationships: </span>
                     <span className="font-semibold">{metrics.totalEdges}</span>
                   </div>
                   <div>
@@ -123,12 +123,12 @@ export default function Home() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  if (selectedNode) {
+                  if (selectedNode && 'ipId' in selectedNode) {
                     setSelectedTreeIp(selectedNode.ipId);
                     setShowGenealogyTree(true);
                   }
                 }}
-                disabled={!selectedNode}
+                disabled={!selectedNode || !('ipId' in selectedNode)}
                 className="bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-white disabled:opacity-50"
               >
                 <GitBranch className="h-4 w-4 mr-2" />
@@ -187,7 +187,7 @@ export default function Home() {
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                Loading IP assets from Story Protocol...
+                Loading RWA assets from Mantle Network...
               </motion.p>
             </div>
           </motion.div>

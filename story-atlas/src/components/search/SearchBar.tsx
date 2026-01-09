@@ -71,7 +71,7 @@ export default function SearchBar({ onSelectIP }: SearchBarProps) {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
         <Input
           type="text"
-          placeholder="Search IPs by name, creator, or address..."
+          placeholder="Search RWA assets by name, owner, or address..."
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -118,7 +118,7 @@ export default function SearchBar({ onSelectIP }: SearchBarProps) {
 
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-white truncate">
-                      {ip.metadata?.name || 'Unnamed IP'}
+                      {ip.metadata?.name || 'Unnamed Asset'}
                     </p>
                     <p className="text-xs text-zinc-500 mt-0.5">
                       {formatAddress(ip.ipId)}
@@ -142,7 +142,7 @@ export default function SearchBar({ onSelectIP }: SearchBarProps) {
           ) : debouncedQuery ? (
             <div className="py-8 text-center text-zinc-500">
               <p>No results found for "{debouncedQuery}"</p>
-              <p className="text-sm mt-1">Try searching by IP name or address</p>
+              <p className="text-sm mt-1">Try searching by asset name or address</p>
             </div>
           ) : null}
         </div>

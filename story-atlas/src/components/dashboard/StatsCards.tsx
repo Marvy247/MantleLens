@@ -20,7 +20,7 @@ interface StatsCardsProps {
 export default function StatsCards({ stats }: StatsCardsProps) {
   const cards = [
     {
-      title: 'Total IP Assets',
+      title: 'Total RWA Assets',
       value: stats.totalIPs.toLocaleString(),
       icon: Network,
       color: 'text-blue-400',
@@ -35,20 +35,20 @@ export default function StatsCards({ stats }: StatsCardsProps) {
     },
     {
       title: 'Total Revenue',
-      value: `${parseFloat(stats.totalRevenue).toFixed(2)} IP`,
+      value: `$${parseFloat(stats.totalRevenue).toLocaleString()}`,
       icon: Coins,
       color: 'text-green-400',
       bgColor: 'bg-green-500/10',
     },
     {
-      title: 'Avg Derivatives/IP',
+      title: 'Avg Children/Asset',
       value: stats.avgDerivativesPerIP.toFixed(1),
       icon: TrendingUp,
       color: 'text-amber-400',
       bgColor: 'bg-amber-500/10',
     },
     {
-      title: 'Commercial IPs',
+      title: 'Compliant Assets',
       value: stats.commercialIPs.toLocaleString(),
       icon: Zap,
       color: 'text-cyan-400',

@@ -145,7 +145,7 @@ export default function GenealogyTree({ tree, onClose }: GenealogyTreeProps) {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-zinc-800">
             <div>
-              <h2 className="text-xl font-bold text-white">IP Genealogy Tree</h2>
+              <h2 className="text-xl font-bold text-white">Asset Genealogy Tree</h2>
               <p className="text-sm text-zinc-400 mt-1">
                 Explore the complete derivative chain
               </p>

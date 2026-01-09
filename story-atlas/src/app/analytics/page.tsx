@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
                       : 0}%
                   </p>
                   <p className="text-xs text-zinc-500 mt-2">
-                    of IPs have created derivatives
+                    of assets have children
                   </p>
                 </div>
 
@@ -134,12 +134,12 @@ export default function AnalyticsPage() {
                       : 0}%
                   </p>
                   <p className="text-xs text-zinc-500 mt-2">
-                    of IPs allow commercial use
+                    of assets are compliant
                   </p>
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-lg">
-                  <p className="text-sm text-zinc-400 mb-2">Avg IPs per Creator</p>
+                  <p className="text-sm text-zinc-400 mb-2">Avg Assets per Owner</p>
                   <p className="text-3xl font-bold text-purple-400">
                     {additionalStats.activeCreators > 0 
                       ? (assets.length / additionalStats.activeCreators).toFixed(1)

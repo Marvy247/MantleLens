@@ -45,7 +45,7 @@ export default function IPsOverTime({ assets }: IPsOverTimeProps) {
 
   return (
     <Card className="bg-zinc-900 border-zinc-800 p-6">
-      <h3 className="text-lg font-semibold text-white mb-4">IPs Created Over Time</h3>
+      <h3 className="text-lg font-semibold text-white mb-4">Assets Created Over Time</h3>
       
       {chartData.length > 0 ? (
         <ResponsiveContainer width="100%" height={300}>
@@ -82,7 +82,7 @@ export default function IPsOverTime({ assets }: IPsOverTimeProps) {
               strokeWidth={2}
               fillOpacity={1} 
               fill="url(#colorTotal)"
-              name="Total IPs"
+              name="Total Assets"
             />
           </AreaChart>
         </ResponsiveContainer>

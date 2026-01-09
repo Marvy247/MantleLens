@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Story Atlas - IP Relationship Explorer",
-  description: "Interactive visualization of Story Protocol IP assets, derivatives, and licensing relationships",
+  title: "MantleLens - RWA Visibility for Mantle",
+  description: "Crystal-clear visibility into Real World Assets on Mantle Network. Interactive visualization and developer SDK for tracking tokenization, compliance, and yield flows.",
 };
 
 export default function RootLayout({
