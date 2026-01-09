@@ -9,7 +9,8 @@ import {
   generateMockProtocols
 } from './mock-data';
 
-const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
+// Always use mock data for demo/hackathon - no environment variable needed
+const USE_MOCK_DATA = true;
 
 export async function fetchRWAAssets(params?: {
   limit?: number;
