@@ -2,10 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { GraphData, GraphNode, GraphEdge } from '@/lib/story-protocol/types';
 import { RWAGraphData, RWAGraphNode, RWAGraphEdge } from '@/lib/mantle/types';
 import { useGraphStore } from '@/stores/graphStore';
-import { getNodeColor, getNodeSize } from '@/lib/graph/graph-builder';
 import { getNodeColor as getRWANodeColor, getNodeSize as getRWANodeSize } from '@/lib/mantle/graph-builder';
 
 // Dynamically import ForceGraph2D to avoid SSR issues
@@ -19,14 +17,9 @@ const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), {
 });
 
 interface ForceGraphProps {
-  data: GraphData | RWAGraphData;
+  data: RWAGraphData;
   width?: number;
   height?: number;
-}
-
-// Type guard to check if data is RWAGraphData
-function isRWAGraphData(data: GraphData | RWAGraphData): data is RWAGraphData {
-  return data.nodes.length > 0 && 'assetType' in data.nodes[0];
 }
 
 export default function ForceGraph({ data, width = 800, height = 600 }: ForceGraphProps) {
@@ -52,7 +45,7 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
     console.log('✅ Node clicked:', node.name);
     
     // Set selected node to show details panel
-    setSelectedNode(node as GraphNode);
+    setSelectedNode(node as RWAGraphNode);
     
     // Highlight connected nodes
     const connectedNodeIds = new Set<string>();
@@ -76,24 +69,21 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
 
   // Handle node hover
   const handleNodeHover = (node: any) => {
-    setHoveredNode(node as GraphNode | null);
+    setHoveredNode(node as RWAGraphNode | null);
   };
-
-  // Detect if we're using RWA data
-  const isRWAData = isRWAGraphData(data);
 
   // Node canvas rendering
   const nodeCanvasObject = (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
     const label = node.name;
     const fontSize = 12 / globalScale;
-    const nodeSize = isRWAData ? getRWANodeSize(node) : getNodeSize(node);
+    const nodeSize = getRWANodeSize(node);
     const isHighlighted = highlightedNodes.has(node.id);
     const isSelected = selectedNode?.id === node.id;
 
     // Draw node circle
     ctx.beginPath();
     ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI);
-    ctx.fillStyle = isRWAData ? getRWANodeColor(node) : getNodeColor(node);
+    ctx.fillStyle = getRWANodeColor(node);
     ctx.fill();
 
     // Add border for selected/highlighted nodes
@@ -137,8 +127,8 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
       if (globalScale > 0.7) {
         const arrowLength = 10 / globalScale;
         const angle = Math.atan2(targetNode.y - sourceNode.y, targetNode.x - sourceNode.x);
-        const arrowX = targetNode.x - Math.cos(angle) * (getNodeSize(targetNode) + 2);
-        const arrowY = targetNode.y - Math.sin(angle) * (getNodeSize(targetNode) + 2);
+        const arrowX = targetNode.x - Math.cos(angle) * (getRWANodeSize(targetNode) + 2);
+        const arrowY = targetNode.y - Math.sin(angle) * (getRWANodeSize(targetNode) + 2);
 
         ctx.beginPath();
         ctx.moveTo(arrowX, arrowY);
@@ -194,7 +184,7 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
             enablePanInteraction={true}
             // Make nodes easier to click
             nodePointerAreaPaint={(node: any, color: string, ctx: CanvasRenderingContext2D) => {
-              const nodeSize = isRWAData ? getRWANodeSize(node) : getNodeSize(node);
+              const nodeSize = getRWANodeSize(node);
               ctx.fillStyle = color;
               ctx.beginPath();
               ctx.arc(node.x, node.y, nodeSize * 3, 0, 2 * Math.PI);
@@ -217,9 +207,7 @@ export default function ForceGraph({ data, width = 800, height = 600 }: ForceGra
                   <div 
                     className="w-3 h-3 rounded-full animate-pulse"
                     style={{ 
-                      backgroundColor: isRWAData 
-                        ? getRWANodeColor(hoveredNode as any) 
-                        : getNodeColor(hoveredNode as any)
+                      backgroundColor: getRWANodeColor(hoveredNode as any)
                     }}
                   />
                   <div className="text-sm font-bold text-white">{hoveredNode.name}</div>

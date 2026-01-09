@@ -1,10 +1,9 @@
 // Zustand store for graph state management
 import { create } from 'zustand';
 import { RWAGraphNode } from '../lib/mantle/types';
-import { GraphNode as LegacyGraphNode } from '../lib/story-protocol/types';
 
-// Support both RWA and legacy types for backward compatibility
-type GraphNodeType = RWAGraphNode | LegacyGraphNode;
+// Use RWA graph node type
+type GraphNodeType = RWAGraphNode;
 
 interface GraphState {
   selectedNode: GraphNodeType | null;

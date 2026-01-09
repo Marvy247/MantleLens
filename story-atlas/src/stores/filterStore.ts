@@ -1,7 +1,6 @@
 // Zustand store for filter state management
 import { create } from 'zustand';
 import { FilterOptions as RWAFilterOptions, RWAAssetType, ComplianceStatus, CustodyStatus } from '../lib/mantle/types';
-import { FilterOptions as LegacyFilterOptions } from '../lib/story-protocol/types';
 
 // Combined filter state for RWA assets
 interface FilterState extends RWAFilterOptions {

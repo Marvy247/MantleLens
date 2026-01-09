@@ -32,7 +32,7 @@ export default function MantleAssetAtlas() {
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
   const [viewMode, setViewMode] = useState<ViewMode>('graph');
   const filters = useFilterStore();
-  const { selectedNode } = useGraphStore();
+  const { selectedNode, setSelectedNode } = useGraphStore();
   const { assets, isLoading: assetsLoading } = useRWAAssets({ limit: 1000 });
   const { graphData, metrics, isLoading, isError } = useRWAGraphData(filters);
 
@@ -260,7 +260,7 @@ export default function MantleAssetAtlas() {
                 />
                 
                 {/* Node Details Panel */}
-                {selectedNode && <NodeDetails node={selectedNode} />}
+                {selectedNode && <NodeDetails node={selectedNode} onClose={() => setSelectedNode(null)} />}
                 
                 {/* Graph Stats Overlay */}
                 <div className="absolute top-4 left-4 space-y-2">
